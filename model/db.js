@@ -1,2 +1,3 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/kinodb');
+var connectionString = process.env.MONGOLAB_URI || 'mongodb://localhost/kinodb';
+mongoose.connect(connectionString);
