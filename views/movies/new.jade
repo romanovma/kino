@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    h1.
+        #{title}
+    form#formAddMovie(name="addmovie",method="post",action="/movies")
+        p Name:
+            input#inputName(type="text", placeholder="ex. TED 2", name="name")
+        p Year:
+            input#inputYear(type="number", placeholder="ex. 2015", name="year")
+        p imdbid:
+            input#inputImdbid(type="text", name="imdbid")
+        p Image:
+            input#inputImage(type="text", name="image")
+        p
+            button#btnSubmit(type="submit") submit
