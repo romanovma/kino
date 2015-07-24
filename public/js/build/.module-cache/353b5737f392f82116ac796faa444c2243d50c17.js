@@ -54,6 +54,9 @@ var MovieCard = React.createClass({displayName: "MovieCard",
         this.setState({cardType: "schedule"});
         break;
       case "schedule":
+        this.setState({cardType: "info"});
+        break;
+      case "info":
       default:
         this.setState({cardType: "image"});
     };
@@ -79,7 +82,7 @@ var MovieCard = React.createClass({displayName: "MovieCard",
       case "image":
       default:
         return (
-          React.createElement("div", {className: "movieCard col-xs-12 col-sm-6 panel", onTouchEnd: this.handleTouch}, 
+          React.createElement("div", {className: "movieCard col-xs-12 col-sm-6 panel", onTouchStart: this.handleTouch}, 
             React.createElement("h4", {className: "movieName"}, 
               this.props.name
             ), 

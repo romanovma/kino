@@ -4,10 +4,8 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-
     db = require('./model/db'),
     movie = require('./model/movies'),
-    //routes = require('./routes/index'),
     movies = require('./routes/movies');
 
 //var users = require('./routes/users');
@@ -15,8 +13,8 @@ var express = require('express'),
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

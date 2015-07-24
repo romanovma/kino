@@ -1,43 +1,41 @@
 var express = require('express'),
-    router = express.Router(),
     mongoose = require('mongoose'), //mongo connection
     bodyParser = require('body-parser'), //parses information from POST
     methodOverride = require('method-override'), //used to manipulate POST
     async = require('async'),
+    debug = require('debug')('router'),
     dataManager = require('./dataManager');
 
-
-    router.use(bodyParser.urlencoded({ extended: true }));
+var router = express.Router();
+/*  router.use(bodyParser.urlencoded({ extended: true }));
     router.use(methodOverride(function(req, res){
       if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
-        var method = req.body._method
-        delete req.body._method
-        return method
+        var method = req.body._method;
+        delete req.body._method;
+        return method;
       }
     }));
+*/
 
-
-    router.route('/')
+/*    router.route('/')
         //view all movies
         .get(function(req, res, next) {
-            //retrieve all blobs from Monogo
-            mongoose.model('Movie').find({}, function (err, movies) {
-                  if (err) {
-                      return console.error(err);
-                  } else {
-                      //respond to HTML
-                      res.format({
-                          //HTML response will render the index.jade file in the views/movies folder. We are also setting "blobs" to be an accessible variable in our jade view
-                        html: function(){
-                            res.render('movies/index', {
-                                  title: 'All my Movies',
-                                  "movies" : movies
-                              });
-                        }
-                    });
-                  }
-            });
+          mongoose.model('Movie').find({}, function (err, movies) {
+            if (err) {
+              return console.error(err);
+            } else {
+              res.format({
+                //HTML response will render the index.jade file in the views/movies folder. We are also setting "blobs" to be an accessible variable in our jade view
+                html: function(){
+                  res.render('movies/index', {
+                    title: 'All my Movies',
+                    "movies" : movies
+                  });
+                }
+              });
+            }
+          });
         })
 
         //add new movie
@@ -50,10 +48,10 @@ var express = require('express'),
 
         //call the create function for our database
         mongoose.model('Movie').create({
-            name : name,
-            year : year,
-            imdbID : imdbID,
-            image : image
+          name : name,
+          year : year,
+          imdbID : imdbID,
+          image : image
         }, function (err, movie) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
@@ -94,26 +92,21 @@ var express = require('express'),
         });
       });
 
-
-    //view movie info
+    //add new movie
     router.get('/new', function(req, res) {
       res.render('movies/new', { title: 'Add New Movie' });
     });
-
-    router.get('/header', function(req, res) {
-      dataManager.getHeader();
-    })
-
-    //get movies from cfc
+*/
+    //get movies from SfCinema
     router.get('/refresh', function(req, res) {
       console.log("Request handler 'refresh' was called.");
 
       async.waterfall([
         dataManager.cleanDb,
-        dataManager.getScheduleSfcinemaFromFile,
-        dataManager.getMovieInfo,
-        dataManager.saveToFile,
-        dataManager.saveToDb
+        dataManager.getSfcinemaScheduleFromFile,
+        dataManager.getMoviesInfo,
+        dataManager.saveMoviesToFile,
+        dataManager.saveMoviesToDb
       ], function (err){
         if (err) {
           res.send(err);
@@ -129,7 +122,7 @@ var express = require('express'),
         };
       });
     });
-
+/*
     // route middleware to validate :id
     router.param('id', function(req, res, next, id) {
       //find the ID in the Database
@@ -175,5 +168,5 @@ var express = require('express'),
           }
         });
       });
-
+*/
     module.exports = router;
