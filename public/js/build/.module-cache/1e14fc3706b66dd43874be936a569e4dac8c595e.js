@@ -54,6 +54,9 @@ var MovieCard = React.createClass({displayName: "MovieCard",
         this.setState({cardType: "schedule"});
         break;
       case "schedule":
+        this.setState({cardType: "info"});
+        break;
+      case "info":
       default:
         this.setState({cardType: "image"});
     };
