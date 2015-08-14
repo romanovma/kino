@@ -1,0 +1,39 @@
+{
+  "name": "swipe-js-iso",
+  "version": "2.0.1",
+  "main": "swipe.js",
+  "scripts": {
+    "build": "grunt"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.4"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "gitHead": "8f74f21a2801b7edc290d53d8cbf3c157081699d",
+  "description": "> Fork of original [Swipe](https://github.com/thebird/Swipe) in order to be published to NPM (has no deps) and being compatible with isomorphic apps. Install it like:",
+  "_id": "swipe-js-iso@2.0.1",
+  "_shasum": "f670c72bb98116485c194e69454cdb6897770a18",
+  "_from": "swipe-js-iso@>=2.0.0",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "dmitri",
+    "email": "dmitri.voronianski@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "dmitri",
+      "email": "dmitri.voronianski@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "f670c72bb98116485c194e69454cdb6897770a18",
+    "tarball": "http://registry.npmjs.org/swipe-js-iso/-/swipe-js-iso-2.0.1.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/swipe-js-iso/-/swipe-js-iso-2.0.1.tgz",
+  "readme": "ERROR: No README data found!"
+}
