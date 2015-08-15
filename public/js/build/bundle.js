@@ -31641,7 +31641,7 @@ var $ = require('jquery');
 
 
 var CINEMAS = ['MAYA', 'PROMENADA', 'FESTIVAL', 'AIRPORT'];
-var HOURSTART = 11;
+var HOURSTART = 10;
 var HOUREND = 24;
 var HOURS = HOUREND - HOURSTART;
 var FONTFACTOR = 0.66; //font-size divided by line-height
@@ -31708,7 +31708,8 @@ var MovieCard = React.createClass({displayName: "MovieCard",
     var today = +(new Date()).setHours(0,0,0,0);
     //var today = 1437325200000;
     for (var day in this.props.dates) {
-      if (day >= today) {
+      var date = new Date(day);
+      if (+date >= today) {
         movieDays.push(
           React.createElement("div", null, 
             React.createElement(MovieDay, {name: this.props.name, times: this.props.dates[day], day: day})
@@ -31716,6 +31717,7 @@ var MovieCard = React.createClass({displayName: "MovieCard",
         );
       }
     }
+
     return (
       React.createElement("div", {className: "col-xs-12 col-sm-6 panel"}, 
         React.createElement("h4", {className: "movieName"}, 
@@ -31768,11 +31770,16 @@ var MovieDay = React.createClass({displayName: "MovieDay",
     //draw schedule
     ctx.fillStyle = '#222222';
     ctx.font='lighter ' + fontsize + 'px Times New Roman';
-    this.props.times.forEach(function (dateString) {
-      var date = new Date(dateString);
-      var minutes = (date.getHours() - HOURSTART) * 60 + date.getMinutes();
-      ctx.fillText(date.toTimeString().toString().slice(0,5), 10, height / HOURS + minutes / (HOURS * 60) * (height - height/HOURS));
-    });
+    for (var j = 0; j < count; j++) {
+      if (this.props.times.hasOwnProperty(CINEMAS[j])) {
+        this.props.times[CINEMAS[j]].forEach(function (dateString) {
+          var date = new Date(dateString);
+          var minutes = (date.getHours() - HOURSTART) * 60 + date.getMinutes();
+
+          ctx.fillText(date.toTimeString().slice(0,5), j * (width/count) + 10, height / HOURS + minutes / (HOURS * 60) * (height - height/HOURS));
+        });
+      }
+    }
   },
   componentDidMount: function () {
     var canvas = document.getElementById(this.props.name + this.props.day);
@@ -31782,12 +31789,13 @@ var MovieDay = React.createClass({displayName: "MovieDay",
   },
   todayString: function (day) {
     var today = +(new Date()).setHours(0,0,0,0);
+    day = +(new Date(day));
     if (day == today) {
       return 'Today';
     } else if (day - 1000 * 60 * 60 * 24 == today) {
       return 'Tomorrow';
     } else {
-      var result = new Date(+day);
+      var result = new Date(day);
       return WEEKDAY[result.getDay()];
     }
   },
@@ -31795,7 +31803,7 @@ var MovieDay = React.createClass({displayName: "MovieDay",
     return (
       React.createElement("div", null, 
         React.createElement("div", null, " ", this.todayString(this.props.day), " "), 
-        React.createElement("canvas", {id: this.props.name + this.props.day, width: "300px", height: "400px"})
+        React.createElement("canvas", {id: this.props.name + this.props.day, width: "290px", height: "400px"})
       )
     );
   }

@@ -88,19 +88,18 @@ function parseSfcData(cinema, str) {
         name: $(this).text(),
         dates: {}
       }) - 1 ;
-      movies[lastMovie].dates[cinema] = {};
+      //movies[lastMovie].dates[cinema] = {};
       break;
     case 'PrintShowTimesDay':
       date = $(this).text().substring(4);
       day = moment(date + ' +0700', 'DD MMM Z');
-      if (movies[lastMovie].dates[cinema][day] === undefined) {
-        movies[lastMovie].dates[cinema][day] = [];
-      }
+      movies[lastMovie].dates[day] = {};
+      movies[lastMovie].dates[day][cinema] = [];
       break;
     case 'PrintShowTimesSession':
       times = $(this).text().split(', ');
       times.forEach(function(time) {
-        movies[lastMovie].dates[cinema][day].push(moment(date + ' ' + time + ' +0700', 'DD MMM HH:mm Z').toString());
+        movies[lastMovie].dates[day][cinema].push(moment(date + ' ' + time + ' +0700', 'DD MMM HH:mm Z').toString());
       });
       break;
     default: break;
@@ -126,9 +125,10 @@ function parseMajorData(cinema, str) {
 
   movies.forEach(function(movie) {
     index = result.push({name: movie.movie_title, dates: {} }) - 1;
-    result[index].dates[cinema] = {};
+    //result[index].dates[cinema] = {};
     var day = moment(movie.date + ' +0700', 'YYYY-MM-DD Z');
-    var times = result[index].dates[cinema][day] = [];
+    result[index].dates[day] = {};
+    var times = result[index].dates[day][cinema] = [];
     movie.showtimes.forEach(function (time) {
       times.push(moment(movie.date + ' ' + time + ' +0700', 'YYYY-MM-DD HH:mm Z').toString());
     });
@@ -293,39 +293,38 @@ function saveMoviesToFile(cinema, movies, callback) {
 
 function mergeMoviesToFile(cinema, newMovies, callback) {
   async.waterfall([
-    async.apply(readAllMovies, newMovies),
+    async.apply(readCurrentMovies, newMovies),
     mergeMovies,
     saveToFile
   ], function (err){
     if (err) {
       callback(err);
     } else {
-      debug(cinema + ': movies are merged');
+      debug(cinema + ': movies are completely merged');
       callback(null);
     }
   });
 
-  function readAllMovies(newMovies, callback) {
-    fs.readFile('./public/movies.json', function(err, allMovies) {
+  function readCurrentMovies(newMovies, callback) {
+    fs.readFile('./public/movies.json', function(err, currentMovies) {
       if(err) {
         callback(err, null, null);
       } else {
         debug(cinema + ': movies.json is read');
-        callback(null, newMovies, allMovies.toString());
+        callback(null, newMovies, currentMovies.toString());
       }
     });
   }
 
-  function mergeMovies(newMovies, allMovies, callback) {
+  function mergeMovies(newMovies, currentMovies, callback) {
     debug(cinema + ': Merge movies invoked');
-    var index = -1;
 
-    if (allMovies === '') {
-      allMovies = '[]';
+    if (currentMovies === '') {
+      currentMovies = '[]';
     }
 
     try {
-      allMovies = JSON.parse(allMovies);
+      currentMovies = JSON.parse(currentMovies);
     } catch (err) {
       callback(err);
       return;
@@ -334,20 +333,27 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
     debug(cinema + ': movies.json JSON parsed');
 
     newMovies.forEach(function (newMovie) {
-      index = -1;
-      allMovies.forEach(function(oldMovie, i) {
-        if (oldMovie.imdbid === newMovie.imdbid) {
-          index = i;
+      var curDates = '';
+      currentMovies.forEach(function (curMovie, i) {
+        if (curMovie.imdbid === newMovie.imdbid) {
+          curDates = currentMovies[i].dates;
         }
       });
-      if (index > -1) {
-        allMovies[index].dates[cinema] = newMovie.dates[cinema];
+      if (!curDates) {
+        currentMovies.push(newMovie);
       } else {
-        allMovies.push(newMovie);
+        for (var date in newMovie.dates) {
+          if  (curDates.hasOwnProperty(date)) {
+            curDates[date][cinema] = newMovie.dates[date][cinema];
+          } else {
+            curDates[date] = {};
+            curDates[date][cinema] = newMovie.dates[date][cinema];
+          }
+        }
       }
     });
 
-    callback(null, allMovies);
+    callback(null, currentMovies);
     debug(cinema + ': Movies merged');
   }
 
