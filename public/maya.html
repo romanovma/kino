@@ -1,82 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<script>
+			var l7_scheme = 'http';
+			var l7_port = '80';
+			var l7_action_url = "http://resources.nexqloud.com/captcha_valid.html";
+			var l7_vcode_img = 'http://resources.nexqloud.com/l7_nexus/valid.gif';
+			var l7_domain_img = 'default';
+			l7_domain_img = "booking.sfcinemacity.com";
+l7_scheme = "http";
 
+			l7_domain_img = l7_scheme + '://resources.nexqloud.com/assets/captcha_source/mask_img/masked_'+ l7_domain_img + '_' + l7_port + '.jpg';
+			document.write("<script src='"+ l7_scheme +"://resources.nexqloud.com/assets/captcha_source/js/jquery.1.9.1.min.js'><\/script><link href='"+ l7_scheme +"://resources.nexqloud.com/assets/captcha_source/css/bootstrap.css' rel='stylesheet' type='text/css'>");
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-	<HEAD>
-		<title>
-			SF Movie Tickets, Print at Home, Online Booking, Movie Showtimes, Movie Trailers, Online Tickets
-		</title>
+	</script>
+    <style type="text/css">
+    	body {
+			background-color: #4D4D4D;
+    	}
+		.back_img {
+			margin:0 auto;
+			width:1024px;
+			height:768px;
+		}
+		.opacity {
+			background-color:#000000;
+ 			opacity:0.7;
+			filter:alpha(opacity=80);
+			width:100%;
+			height:100%;
+			position:absolute;
+			z-index:1;
+		}
+		.opacity_inner {
+			background-color:#000000;
+ 			opacity:0.7;
+			filter:alpha(opacity=80);
+			width:1024px;
+			height:768px;
+			position:absolute;
+			top:0px;
+			z-index:4;
+		}
+		.content_box {
+			position:absolute;
+			width:100%;
+			height:768px;
+			z-index:3;
+		}
+		.content {
+			position:relative;
+			top:-550px;
+			z-index:5;
+		}
+		.content_title {
+			position:relative;
+			z-index:6;
+			width: 300px;
+			margin:0 auto;
+			color:white;
+		}
+		.inner {
+			margin:0 auto;
+			width: 363px;
+			position: relative;
+			top:-135px;
+			z-index:4;
 
-		<!-- Begin SEO Section -->
-		<meta name="DESCRIPTION" content="Buy and Booking movie tickets online, Find Showtimes, Cinema Informations, View Trailers, read synopsis and movie reviews" />
-		<meta name="KEYWORDS" content="Buy Movie Tickets Online, Booking Movie Tickets Online, Purchase Movie Tickets Online, SF Print@Home SF i-Ticket" />
-		<!-- End SEO Section -->
+		}
+		@media (max-width: 1024px) {
+			.content {
+				top:-700px;
+			}
+			.opacity_inner {
+				width:100%;
+			}
+			.back_img {
+				width:100%;
+				height:768px;	
+			}
+			.opacity_inner {
+				width:100%px;
+				height:768px;
+			}
+		}
+		@media (max-width: 767px) {
+			.content {
+				top:-700px;
+				z-index:5;
+			}
+			.opacity_inner {
+				width:100%;
+			}
+			.back_img {
+				width:100%;
+				height:768px;
+			}
+			.opacity_inner {
+				width:100%px;
+				height:768px;
+			}
+		}
+		@media (max-width: 479px){
+			.back_img {
+				width:100%;
+				height:768px;
+			}
+			.opacity_inner {
+				width:100%;
+				height:768px;
+				}
+			.inner img {
+				width:280px;
+				}
+			.content_title {
+				width:210px;
+			}
+			.content_title h1 {
+				font-size:20px;
+			}
+			.content_title h4 {
+				font-size:15px;
+			}
+			.inner {
+				width: 280px;
+				top:-120px;
+			}
+		}
+    </style>
 
-		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
-		<meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE">
-		<meta content="JavaScript" name="vs_defaultClientScript">
-		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
-		<script language="javascript" src="visJavaCommon.js"></script>
-		<script src="booking_new/tooltip/script.js" type="text/javascript"></script>
-		<link href="booking_new/tooltip/style.css" rel="stylesheet" type="text/css" />
-		<LINK href="visStyles.css" type="text/css" rel="stylesheet">
-		<!-- visStylesUser.css must proceed visStyles.css, so to override the default styles if requested -->
-		<LINK href="visStylesUser.css" type="text/css" rel="stylesheet">
-	</HEAD>
-	<body MS_POSITIONING="GridLayout">
-		<form name="Form1" method="post" action="visPrintShowTimes.aspx?visLang=1&amp;visCinemaId=9936&amp;visMultiCinema=N" id="Form1">
-<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTUyNDAzNDkwMg9kFgRmDxYCHgRUZXh0BWBTRiBNb3ZpZSBUaWNrZXRzLCBQcmludCBhdCBIb21lLCBPbmxpbmUgQm9va2luZywgTW92aWUgU2hvd3RpbWVzLCBNb3ZpZSBUcmFpbGVycywgT25saW5lIFRpY2tldHNkAgEPZBYCAgcPDxYEHgVXaWR0aBsAAAAAAACEQAEAAAAeBF8hU0ICgAJkZGRuW88GujxotUeqVnTpMD4joQ8veg==" />
+  	</head>
+	<body>
+		<div class="content_box">
+			<div class="back_img">
+			<div class="opacity_inner">
+			</div>
+			</div>
 
-<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="21ED10F5" />
-		    <table cellpadding=0 cellspacing=0 width=560 class="PrintShowTimesHeaderTable">
-		        <tr>
-		            <td valign="middle">
-		                </td>
-		            <td><table id="tblHeader" class="PrintShowTimesHeaderTable" border="0">
-	<tr>
-		<td colspan="2"><a href="Javascript: supportedPrint();"><img src="booking_new/images/form/print-this-page.jpg" id="imgPrint" Class="ImagePrintShowTimes" onmouseover="this.src='booking_new/images/form/print-this-page-hover.jpg'" onmouseout="this.src='booking_new/images/form/print-this-page.jpg'" border="0" /></a></td>
-	</tr><tr>
-		<td><span class="PrintSelectionLabel">Cinema:</span></td><td><span class="PrintCinemaName">SFX CINEMA Maya Chiangmai</span></td>
-	</tr><tr>
-		<td colspan="2"><span class="PrintDateRange">Showtimes for, Sat 15 Aug - Fri 21 Aug</span></td>
-	</tr><tr>
-		<td colspan="2"><span class="PrintSelectionLabel">**All movies and sessions of SFX CINEMA Maya Chiangmai**</span></td>
-	</tr>
-</table></td>
-		        </tr>
-		        <tr>
-		            <td colspan=2></td>
-		        </tr>
-		    </table>
-
-			<table id="tblShowTimes" class="PrintShowTimesTable" border="0" style="width:640px;">
-	<tr>
-		<td style="width:145px;"></td><td style="width:495px;"></td>
-	</tr><tr>
-		<td class="PrintShowTimesFilm" colspan="2">INSIDE OUT (E) [G]</td>
-	</tr><tr>
-		<td class="PrintShowTimesDay" valign="top" colspan="1">Sat 15 Aug</td><td class="PrintShowTimesSession" valign="top" colspan="1">12:20, 14:30, 16:40, 18:50, 21:00, 23:10</td>
-	</tr><tr>
-		<td class="PrintShowTimesDay" valign="top" colspan="1">Sun 16 Aug</td><td class="PrintShowTimesSession" valign="top" colspan="1">12:20, 14:30, 16:40, 18:50, 21:00, 23:10</td>
-	</tr><tr style="height:5px;">
-		<td colspan="2"></td>
-	</tr><tr>
-		<td class="PrintShowTimesFilm" colspan="2">MAN FROM U.N.C.L.E., THE (E) [G]</td>
-	</tr><tr>
-		<td class="PrintShowTimesDay" valign="top" colspan="1">Sat 15 Aug</td><td class="PrintShowTimesSession" valign="top" colspan="1">13:30, 16:00, 18:30, 21:00, 23:25</td>
-	</tr><tr>
-		<td class="PrintShowTimesDay" valign="top" colspan="1">Sun 16 Aug</td><td class="PrintShowTimesSession" valign="top" colspan="1">11:15, 13:30, 16:00, 18:30, 21:00, 23:25</td>
-	</tr><tr style="height:5px;">
-		<td colspan="2"></td>
-	</tr><tr>
-		<td class="PrintShowTimesFilm" colspan="2">PIXELS (A) [TBC]</td>
-	</tr><tr>
-		<td class="PrintShowTimesDay" valign="top" colspan="1">Thu 20 Aug</td><td class="PrintShowTimesSession" valign="top" colspan="1">11:40, 14:00, 16:20, 18:40, 21:00, 23:20</td>
-	</tr><tr>
-		<td class="PrintShowTimesDay" valign="top" colspan="1">Fri 21 Aug</td><td class="PrintShowTimesSession" valign="top" colspan="1">11:40, 14:00, 16:20, 18:40, 21:00, 23:20</td>
-	</tr>
-</table>
-
-		</form>
+			<div class="content">
+				<div class="content_title">
+					<h1>Sorry...</h1>
+					<h4>You are not allowed to visit this page, please contact site administractor.</h4>
+				</div>
+				<div class="inner">
+        			<img src="http://resources.nexqloud.com/assets/captcha_source/img/web-loading-2.png">
+				</div>
+			</div>
+		</div>
 	</body>
-</HTML>
+	<script>
+		$(document).ready(function(){
+eval(function(p,a,c,k,e,r){e=String;if('0'.replace(0,e)==0){while(c--)r[e(c)]=k[c];k=[function(e){return r[e]||e}];e=function(){return'^$'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(".back_img").css({background:"url("+l7_domain_img+")"});',[],1,''.split('|'),0,{}))
+		})
+	</script>	
+</html>

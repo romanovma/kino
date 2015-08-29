@@ -43,7 +43,7 @@ function getRawSchedule(cinema, callback) {
           callback(err, null, null);
         } else {
           debug(cinema + ': Movies from ' + cinema + ' are saved to ' + filename);
-          callback(null, cinema, filename);
+          callback(null, cinema, filename, str);
         }
       });
     });
