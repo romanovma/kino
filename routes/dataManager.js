@@ -6,28 +6,92 @@ var fs = require('fs');
 var moment = require('moment');
 var debug = require('debug')('DataManager');
 
-//main
+var CINEMAS = ['MAYA', 'PROMENADA', 'AIRPORT', 'FESTIVAL'];
+
+//for export
+function getRawScheduleAll(cinema, callback) {
+  if (cinema === 'ALL') {
+    async.parallel([
+      async.apply(getRawSchedule, 'MAYA'),
+      async.apply(getRawSchedule, 'PROMENADA'),
+      async.apply(getRawSchedule, 'AIRPORT'),
+      async.apply(getRawSchedule, 'FESTIVAL')
+    ], function (err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null);
+      }
+    });
+  } else {
+    getRawSchedule(cinema, function (err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null);
+      }
+    });
+  }
+}
+
+function clearMovieFile(callback) {
+  fs.truncate('./public/movies.json', 0, function(err) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null);
+    }
+  });
+}
+
+function updateScheduleAll(cinema, callback) {
+  if (cinema === 'ALL') {
+    async.parallel([
+      async.apply(updateSchedule, 'MAYA'),
+      async.apply(updateSchedule, 'PROMENADA'),
+      async.apply(updateSchedule, 'AIRPORT'),
+      async.apply(updateSchedule, 'FESTIVAL')
+    ], function (err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null);
+      }
+    });
+  } else {
+    updateSchedule(cinema, function (err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null);
+      }
+    });
+  }
+}
+
+
+//helpers
 function getRawSchedule(cinema, callback) {
   var path = '';
   var filename = cinema + '.html';
 
   switch (cinema) {
   case 'MAYA':
-    path = process.env.SFCINEMA_MAYA || 'http://booking.sfcinemacity.com/visPrintShowTimes.aspx?visLang=1&visCinemaId=9936&visMultiCinema=N';
+    path = process.env.CINEMA_MAYA || 'http://showtimes.everyday.in.th/api/v2/theater/4/showtimes/';
     break;
   case 'PROMENADA':
-    path = process.env.SFCINEMA_PROMENADA || 'http://booking.sfcinemacity.com/visPrintShowTimes.aspx?visLang=1&visCinemaId=9934&visMultiCinema=N';
+    path = process.env.CINEMA_PROMENADA || 'http://showtimes.everyday.in.th/api/v2/theater/29/showtimes/';
     break;
   case 'FESTIVAL':
-    path = process.env.SFCINEMA_FESTIVAL || 'http://showtimes.everyday.in.th/api/v2/theater/83/showtimes/';
+    path = process.env.CINEMA_FESTIVAL || 'http://showtimes.everyday.in.th/api/v2/theater/83/showtimes/';
     break;
   case 'AIRPORT':
-    path = process.env.SFCINEMA_AIRPORT || 'http://showtimes.everyday.in.th/api/v2/theater/82/showtimes/';
+    path = process.env.CINEMA_AIRPORT || 'http://showtimes.everyday.in.th/api/v2/theater/82/showtimes/';
     break;
   }
 
   if (!path) {
-    callback ('no such cinema', null, null);
+    callback ('no such cinema');
     return;
   }
 
@@ -37,19 +101,19 @@ function getRawSchedule(cinema, callback) {
       str += chunk;
     });
     res.on('end', function () {
-      debug(cinema + ': SfCinema data is received from web');
+      debug(cinema + ': Schedule data is received from web');
       fs.writeFile('./public/' + filename, str, function(err) {
         if(err) {
-          callback(err, null, null);
+          callback(err);
         } else {
           debug(cinema + ': Movies from ' + cinema + ' are saved to ' + filename);
-          callback(null, cinema, filename, str);
+          callback(null);
         }
       });
     });
   })
   .on('error', function(err) {
-    callback(err, null, null);
+    callback(err);
   })
   .end();
 }
@@ -69,73 +133,6 @@ function updateSchedule(cinema, callback) {
   });
 }
 
-
-//helpers
-//Sfc and Major - two different cinema networks. Data from them are parsed differently
-function parseSfcData(cinema, str) {
-  var movies = [];
-  var lastMovie = -1;
-  var date = '';
-  var day = '';
-  var times = [];
-  var $ = cheerio.load(str);
-
-  debug(cinema + ' data is loaded into cheerio');
-  $('#tblShowTimes td').each(function(){
-    switch ($(this).attr('class')) {
-    case 'PrintShowTimesFilm':
-      lastMovie = movies.push({
-        name: $(this).text(),
-        dates: {}
-      }) - 1 ;
-      //movies[lastMovie].dates[cinema] = {};
-      break;
-    case 'PrintShowTimesDay':
-      date = $(this).text().substring(4);
-      day = moment(date + ' +0700', 'DD MMM Z');
-      movies[lastMovie].dates[day] = {};
-      movies[lastMovie].dates[day][cinema] = [];
-      break;
-    case 'PrintShowTimesSession':
-      times = $(this).text().split(', ');
-      times.forEach(function(time) {
-        movies[lastMovie].dates[day][cinema].push(moment(date + ' ' + time + ' +0700', 'DD MMM HH:mm Z').toString());
-      });
-      break;
-    default: break;
-    }
-  });
-  debug(cinema + ': SfCinema data is parsed');
-
-  return movies.filter ( function (movie) {
-    return (movie.name.search(/\(E/i) > -1) || (movie.name.search(/\(/) < 0);
-  });
-}
-
-function parseMajorData(cinema, str) {
-  var movies = [];
-  var result = [];
-  var index = -1;
-
-  movies = JSON.parse(str);
-
-  movies = movies.filter(function (movie) {
-    return (movie.audio === 'en' && (movie.extra === 'type-digital' || movie.extra === 'type-digital;KTB'));
-  });
-
-  movies.forEach(function(movie) {
-    index = result.push({name: movie.movie_title, dates: {} }) - 1;
-    //result[index].dates[cinema] = {};
-    var day = moment(movie.date + ' +0700', 'YYYY-MM-DD Z');
-    result[index].dates[day] = {};
-    var times = result[index].dates[day][cinema] = [];
-    movie.showtimes.forEach(function (time) {
-      times.push(moment(movie.date + ' ' + time + ' +0700', 'YYYY-MM-DD HH:mm Z').toString());
-    });
-  });
-  return result;
-}
-
 function prepareJSON(cinema, filename, callback) {
   fs.readFile('./public/' + filename, function(err, str) {
     if(err) {
@@ -143,16 +140,39 @@ function prepareJSON(cinema, filename, callback) {
     } else if (!str.toString()) {
       callback(cinema + ': raw file is empty', null);
     } else {
-      debug(cinema + ': data is read from html');
-      if (cinema === 'MAYA' || cinema === 'PROMENADA') {
-        callback(null, cinema, parseSfcData(cinema, str));
-      } else if (cinema === 'AIRPORT' || cinema === 'FESTIVAL') {
-        callback(null, cinema, parseMajorData(cinema, str));
+      debug(cinema + ': Data is read from temp file');
+      if (CINEMAS.indexOf(cinema) > -1) {
+        callback(null, cinema, parseSchedule(cinema, str));
       } else {
         callback('no such cinema');
       }
     }
   });
+}
+
+function parseSchedule(cinema, str) {
+  var movies = [];
+  var result = [];
+  var index = -1;
+
+  movies = JSON.parse(str);
+
+  movies = movies.filter(function (movie) {
+    //we are looking only for English 2D films
+    return (movie.audio === 'en' && (movie.extra === '' || movie.extra === 'type-digital' || movie.extra === 'type-digital;KTB'));
+  });
+
+  movies.forEach(function(movie) {
+    index = result.push({name: movie.movie_title, dates: {} }) - 1;
+    var day = moment(movie.date + ' +0700', 'YYYY-MM-DD Z');
+    result[index].dates[day] = {};
+    var times = result[index].dates[day][cinema] = [];
+    movie.showtimes.forEach(function (time) {
+      times.push(moment(movie.date + ' ' + time + ' +0700', 'YYYY-MM-DD HH:mm Z').toString());
+    });
+  });
+  debug(cinema + ': Raw data parsed');
+  return result;
 }
 
 function getMoviesInfo(cinema, movies, callback) {
@@ -167,7 +187,7 @@ function getMoviesInfo(cinema, movies, callback) {
       if (err) {
         callback(err, null, null);
       } else {
-        debug(cinema + ': movies info fully received from Themoviedb');
+        debug(cinema + ': Themoviedb info completely received');
         callback(null, cinema, movies);
       }
     });
@@ -177,7 +197,7 @@ function getMoviesInfo(cinema, movies, callback) {
       if (err) {
         callback(err);
       } else {
-        debug(cinema + ': Movies details received from Themoviedb ');
+        debug(cinema + ': Details received from Themoviedb ');
         callback(null);
       }
     });
@@ -256,7 +276,7 @@ function getMoviesInfo(cinema, movies, callback) {
       if (err) {
         callback(err);
       } else {
-        debug(cinema + ': Movies images received from Themoviedb');
+        debug(cinema + ': Images received from Themoviedb');
         callback(null);
       }
     });
@@ -300,7 +320,7 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
     if (err) {
       callback(err);
     } else {
-      debug(cinema + ': movies are completely merged');
+      debug(cinema + ': Movies are completely merged into common file');
       callback(null);
     }
   });
@@ -310,14 +330,14 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
       if(err) {
         callback(err, null, null);
       } else {
-        debug(cinema + ': movies.json is read');
+        debug(cinema + ': File movies.json is read');
         callback(null, newMovies, currentMovies.toString());
       }
     });
   }
 
   function mergeMovies(newMovies, currentMovies, callback) {
-    debug(cinema + ': Merge movies invoked');
+    debug(cinema + ': Merge movies into common file invoked');
 
     if (currentMovies === '') {
       currentMovies = '[]';
@@ -330,7 +350,7 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
       return;
     }
 
-    debug(cinema + ': movies.json JSON parsed');
+    debug(cinema + ': File movies.json JSON read and parsed');
 
     newMovies.forEach(function (newMovie) {
       var curDates = '';
@@ -354,7 +374,7 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
     });
 
     callback(null, currentMovies);
-    debug(cinema + ': Movies merged');
+    debug(cinema + ': Movies merged into common file');
   }
 
   function saveToFile(movies, callback) {
@@ -363,7 +383,7 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
       if(err) {
         callback(err);
       } else {
-        debug(cinema + ': Movies are saved to movies.json');
+        debug(cinema + ': Movies are saved into movies.json');
         callback(null);
       }
     });
@@ -372,9 +392,48 @@ function mergeMoviesToFile(cinema, newMovies, callback) {
 }
 
 
-
-
 //not used
+//parseSfcData can be used to get schedule for the whole week but for some reason SFC has banned me
+function parseSfcData(cinema, str) {
+  var movies = [];
+  var lastMovie = -1;
+  var date = '';
+  var day = '';
+  var times = [];
+  var $ = cheerio.load(str);
+
+  debug(cinema + ': Data is loaded into cheerio');
+  $('#tblShowTimes td').each(function(){
+    switch ($(this).attr('class')) {
+    case 'PrintShowTimesFilm':
+      lastMovie = movies.push({
+        name: $(this).text(),
+        dates: {}
+      }) - 1 ;
+      //movies[lastMovie].dates[cinema] = {};
+      break;
+    case 'PrintShowTimesDay':
+      date = $(this).text().substring(4);
+      day = moment(date + ' +0700', 'DD MMM Z');
+      movies[lastMovie].dates[day] = {};
+      movies[lastMovie].dates[day][cinema] = [];
+      break;
+    case 'PrintShowTimesSession':
+      times = $(this).text().split(', ');
+      times.forEach(function(time) {
+        movies[lastMovie].dates[day][cinema].push(moment(date + ' ' + time + ' +0700', 'DD MMM HH:mm Z').toString());
+      });
+      break;
+    default: break;
+    }
+  });
+  debug(cinema + ': SfCinema data is parsed');
+
+  return movies.filter ( function (movie) {
+    return (movie.name.search(/\(E/i) > -1) || (movie.name.search(/\(/) < 0);
+  });
+}
+//I used to use mongodb for storing but currently I use file system
 function cleanDb(callback) {
   mongoose.model('Movie').find({}).remove(function(err) {
     if (err) {
@@ -417,8 +476,7 @@ function saveMoviesToDb(movies, callback) {
   });
 }
 
-
-exports.cleanDb = cleanDb;
-exports.getRawSchedule = getRawSchedule;
-exports.updateSchedule = updateSchedule;
-exports.saveMoviesToDb = saveMoviesToDb;
+//exports
+exports.getRawScheduleAll = getRawScheduleAll;
+exports.updateScheduleAll = updateScheduleAll;
+exports.clearMovieFile = clearMovieFile;

@@ -1,20 +1,20 @@
-var express = require('express'),
-    path = require('path'),
-    favicon = require('serve-favicon'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    db = require('./model/db'),
-    movie = require('./model/movies'),
-    movies = require('./routes/movies');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+//var db = require('./model/db');
+var express = require('express');
+//var favicon = require('serve-favicon');
+var logger = require('morgan');
+//var movie = require('./model/movies');
+var movies = require('./routes/movies');
+var path = require('path');
+var debug = require('debug')('server');
 
-//var users = require('./routes/users');
 
 var app = express();
 
 // view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -24,9 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', routes);
+
 app.use('/', movies);
-//app.use('/users', users);
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
