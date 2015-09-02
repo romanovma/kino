@@ -31701,12 +31701,9 @@ var MovieCard = React.createClass({displayName: "MovieCard",
     this.refs.ReactSwipe.swipe.next();
   },
   render: function() {
-    var imgStyle = {
-      margin: '0 0 10px 0'
-    };
     var movieDays = [];
     var today = +(new Date()).setHours(0,0,0,0);
-    //var today = 1437325200000;
+
     for (var day in this.props.dates) {
       var date = new Date(day);
       if (+date >= today) {
@@ -31726,7 +31723,7 @@ var MovieCard = React.createClass({displayName: "MovieCard",
         React.createElement(ReactSwipe, {ref: "ReactSwipe"}, 
           React.createElement("div", null, 
             React.createElement("a", {href: "#", onClick: this.next}, " Schedule "), 
-            React.createElement("img", {clasName: "movieImage img-rounded", src: this.props.imagePath, alt: this.props.name, width: "100%", style: imgStyle})
+            React.createElement("img", {className: "movieImage img-rounded poster", src: this.props.imagePath, alt: this.props.name})
           ), 
           movieDays, 
           React.createElement("div", null, 

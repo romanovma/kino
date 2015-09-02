@@ -7,7 +7,7 @@ var logger = require('morgan');
 //var movie = require('./model/movies');
 var movies = require('./routes/movies');
 var path = require('path');
-var debug = require('debug')('server');
+
 
 
 var app = express();

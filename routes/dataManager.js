@@ -476,6 +476,7 @@ function saveMoviesToDb(movies, callback) {
   });
 }
 
+
 //exports
 exports.getRawScheduleAll = getRawScheduleAll;
 exports.updateScheduleAll = updateScheduleAll;
