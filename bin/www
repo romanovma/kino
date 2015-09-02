@@ -114,7 +114,7 @@ var job = new CronJob({
         service: 'gmail',
         auth: {
           user: 'kinoInCM@gmail.com',
-          pass: 'Sosisa1985'
+          pass: '***'
         }
       });
 
