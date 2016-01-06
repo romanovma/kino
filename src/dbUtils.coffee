@@ -43,7 +43,6 @@ module.exports =
           result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1
         ).map((result) ->
           result.cinema = cinema
-          result
         )
         r.table 'movies'
         .insert schedule
