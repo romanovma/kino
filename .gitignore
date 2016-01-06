@@ -1,0 +1,5 @@
+node_modules
+build
+.brackets.json
+npm-debug.log
+src/public
