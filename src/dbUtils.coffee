@@ -41,29 +41,25 @@ module.exports =
       .then (showtimes) ->
         r.table('updates').filter({cinema: cinema.toString()}).run(conn)
         .then (cursor) ->
-          oldDate = ''
           cursor.toArray().then (array) ->
             oldDate = array[0]?.lastUpdate
-            console.log oldDate
-          newDate = showtimes.results.reduce((max, current) ->
-            return if max.updated_on < current.updated_on then current else max).updated_on
-          console.log 'old: ' + oldDate
-          console.log 'new: ' + newDate
-          if not(oldDate?) or (oldDate isnt newDate)
-            schedule = showtimes.results.filter((result) ->
-              result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1
-            ).map((result) ->
-              result.cinema = cinema
-              result
-            )
-            r.table('movies').filter({cinema: cinema.toString()}).delete().run(conn).then () ->
-              r.table('movies').insert(schedule).run(conn)
-              .then (result) ->
-                finResult.push result
-                r.table('updates').filter({cinema: cinema.toString()}).update({lastUpdate: newDate}).run(conn).then (result) ->
+            newDate = showtimes.results.reduce((max, current) ->
+              return if max.updated_on < current.updated_on then current else max).updated_on
+            if not(oldDate?) or (oldDate isnt newDate)
+              schedule = showtimes.results.filter((result) ->
+                result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1
+              ).map((result) ->
+                result.cinema = cinema
+                result
+              )
+              r.table('movies').filter({cinema: cinema.toString()}).delete().run(conn).then () ->
+                r.table('movies').insert(schedule).run(conn)
+                .then (result) ->
                   finResult.push result
-          else
-            return)
+                  r.table('updates').filter({cinema: cinema.toString()}).update({lastUpdate: newDate}).run(conn).then (result) ->
+                    finResult.push result
+            else
+              return)
     .then () ->
       finResult
     .finally(next)
