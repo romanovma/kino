@@ -3,9 +3,9 @@ cookieParser = require 'cookie-parser'
 express = require 'express'
 # favicon = require('serve-favicon')
 logger = require 'morgan'
-movies = require './movies'
+routes = require './routes'
 path = require 'path'
-db = require './dbUtils'
+dbUtils = require './dbUtils'
 
 
 app = express()
@@ -20,15 +20,15 @@ app.use logger('dev')
 app.use bodyParser.json()
 app.use bodyParser.urlencoded({ extended: false })
 app.use cookieParser()
-# app.use(express.static(path.join(__dirname, 'public')))
-app.use '/js', express.static(path.join(__dirname, (process.env.JS_FOLDER || 'app')))
-app.use '/css', express.static(path.join(__dirname, (process.env.CSS_FOLDER || 'css')))
+app.use(express.static(path.join(__dirname, '../public')))
+#app.use '/js', express.static(path.join(__dirname, (process.env.JS_FOLDER || 'app')))
+#app.use '/css', express.static(path.join(__dirname, (process.env.CSS_FOLDER || 'css')))
 
-app.use db.createConnection
+app.use dbUtils.createConnection
 
-app.use '/', movies
+app.use '/', routes
 
-app.use db.closeConnection
+app.use dbUtils.closeConnection
 
 app.use (err, req, res, next) ->
   console.error err.stack

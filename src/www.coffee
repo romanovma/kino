@@ -6,13 +6,15 @@
 
 app = require './server'
 config = require './config'
-#async = require 'async'
 CronJob = require('cron').CronJob
-dataManager = require './dataManager'
 debug = require('debug')('server')
 http = require 'http'
 nodemailer = require 'nodemailer'
 r = require 'rethinkdb'
+dbUtils = require './dbUtils'
+moment = require 'moment'
+
+
 
 ###
  Helpers
@@ -80,49 +82,19 @@ server.on 'listening', onListening
 
 
 ###
- Cron Job which gets new schedule every night.
+ Cron Job which checks new schedule every 30 minutes.
 ###
 
-###
-new CronJob({
-  cronTime: '*  0-23  * *',
-  onTick: function() {
-    debug('cron started')
-    async.series([
-      async.apply(dataManager.getRawScheduleAll, 'ALL'),
-      dataManager.clearMovieFile,
-      async.apply(dataManager.updateScheduleAll, 'ALL')
-    ], function (err) {
-      if (!err) err = 'Schedule updated'
-      debug(err)
-      transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'kinoInCM@gmail.com',
-          pass: '***'
-        }
-      })
-
-      mailOptions = {
-        from: 'kinoInCM@gmail.com',
-        to: 'romanovma.pookl@gmail.com',
-        subject: 'kino: schedule update',
-        text: err
-      }
-
-      transporter.sendMail(mailOptions, function(error, response){
-        if(error)
-        {
-          debug('error:' + error)
-        } else
-        {
-          debug('message:' + response.message)
-        }
-        transporter.close()
-      })
-    })
-  },
-  start: true,
+new CronJob
+  cronTime: '0 */30 * * * *'
+  onTick: () ->
+    console.log 'cron started: ' + moment().format();
+    r.connect config.rethinkdb
+    .then (connection) ->
+      dbUtils.updateSchedule connection
+      .then (result) ->
+        console.log result
+        console.log 'cron finished: ' + moment().format();
+  start: no
   timeZone: 'Asia/Bangkok'
-})
-###
+.start()
