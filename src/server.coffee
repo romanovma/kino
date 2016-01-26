@@ -20,7 +20,7 @@ app.use logger('dev')
 app.use bodyParser.json()
 app.use bodyParser.urlencoded({ extended: false })
 app.use cookieParser()
-app.use(express.static(path.join(__dirname, '../public')))
+app.use(express.static(path.join(__dirname, '../build')))
 #app.use '/js', express.static(path.join(__dirname, (process.env.JS_FOLDER || 'app')))
 #app.use '/css', express.static(path.join(__dirname, (process.env.CSS_FOLDER || 'css')))
 

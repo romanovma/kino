@@ -15,7 +15,6 @@ dbUtils = require './dbUtils'
 moment = require 'moment'
 
 
-
 ###
  Helpers
 ###

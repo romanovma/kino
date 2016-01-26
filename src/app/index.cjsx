@@ -1,6 +1,6 @@
 React = require 'react'
-Welcome = require './components/Welcome.cjsx'
+App = require './components/App.cjsx'
 
 initialState = JSON.parse document.getElementById('initial-state').innerHTML
 
-React.render <Welcome movies={initialState} />, document.getElementById('content')
+React.render <App movies={initialState} />, document.getElementById('content')

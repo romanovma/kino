@@ -7,7 +7,7 @@
 
 React = require 'react'
 
-module.exports = Welcome = React.createClass
+module.exports = App = React.createClass
   render: ->
     <div>
       'hello world'
