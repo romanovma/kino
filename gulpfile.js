@@ -4,9 +4,7 @@ var del = require('del');
 var fs = require('fs');
 var source = require('vinyl-source-stream');
 
-var cjsx = require('gulp-cjsx');
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps = require('gulp-sourcemaps');
@@ -18,7 +16,7 @@ var buildDir = './build/';
 
 gulp.task('start_server', ['build', 'server']);
 
-gulp.task('build',['browserify', 'sass', 'fonts']);
+gulp.task('build',['browserify', 'jquery', 'sass', 'fonts']);
 
 gulp.task('browserify', function() {
   return browserify('./src/app/index.cjsx')
@@ -41,10 +39,16 @@ gulp.task('sass', function () {
     .pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('cjsx', function() {
-  gulp.src('./src/app/components/Welcome.cjsx')
-    .pipe(cjsx({bare: true}).on('error', gutil.log))
-    .pipe(gulp.dest('./src/app/components/'));
+//@TODO get rid of this. Beleive this is not required
+// gulp.task('cjsx', function() {
+//   gulp.src('./src/app/components/App.cjsx')
+//     .pipe(cjsx({bare: true}).on('error', gutil.log))
+//     .pipe(gulp.dest('./src/app/components/'));
+// });
+
+gulp.task('jquery', function() {
+  gulp.src('./src/app/jquery-plugins.js')
+    .pipe(gulp.dest(buildDir + 'js'));
 });
 
 gulp.task('fonts', function() {
@@ -71,13 +75,14 @@ gulp.task('clean', function() {
 });
 
 
-gulp.task('watch', ['sass'], function() {
+gulp.task('watch', ['browserify', 'jquery', 'sass'], function() {
   browserSync.init({
     proxy: 'http://localhost:8888/',
     reloadDelay: 2000
   });
-  gulp.watch('./src/scss/**/*.scss', ['sass']).on('change', browserSync.reload);
-  gulp.watch('.src/app/**/*.cjsx', ['browserify']).on('change', browserSync.reload);
+  gulp.watch('./src/scss/**/*.scss', ['sass']);
+  gulp.watch('./src/app/jquery-plugins.js', ['jquery']);
+  gulp.watch('./src/app/**/*.cjsx', ['browserify']).on('change', browserSync.reload);
 });
 
 

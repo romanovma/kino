@@ -2,3 +2,13 @@
 //@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css";
 
 @import "materialize";
+
+img {
+  width: 100%;
+  height: auto;
+  max-width: 20rem;
+}
+
+.movie {
+  overflow: hidden;
+}

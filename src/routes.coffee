@@ -4,7 +4,8 @@ debug = require('debug')('router')
 #index = require './app/bundle'
 React = require 'React'
 dbUtils = require './dbUtils'
-Welcome = React.createFactory(require './app/components/Welcome')
+require 'coffee-react/register'
+App = React.createFactory(require './app/components/App.cjsx')
 
 
 router = express.Router()
@@ -14,7 +15,7 @@ router.use bodyParser.urlencoded({ extended: true })
 router.get '/', (req, res, next) ->
   dbUtils.getMovies req._rdbConn
   .then (result) ->
-    rendered = React.renderToString Welcome
+    rendered = React.renderToString App
       movies: result
     res.render 'layout',
       content: rendered
