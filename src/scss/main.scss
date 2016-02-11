@@ -3,12 +3,23 @@
 
 @import "materialize";
 
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 10px;
+  background: black;
+}
+
 img {
   width: 100%;
   height: auto;
-  max-width: 20rem;
+  max-width: 40rem;
+  min-height: 40rem;
 }
 
 .movie {
   overflow: hidden;
+  text-align: center;
 }

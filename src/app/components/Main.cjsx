@@ -1,16 +1,14 @@
 React = require 'react'
 
 module.exports = Main = React.createClass
-  initialState: ->
-    amount: 2
+  #getInitialState: ->
 
   componentDidMount: ->
-    window.addEventListener 'scroll', @handleScroll
+    @hammer = Hammer @getDOMNode()
+    @hammer.on('swipeleft', @handleSwipe)
 
   componentWillUnmount: ->
-    window.removeEventListener 'onScroll', @handleScroll
-
-  handleScroll: (e)->
+    @hammer.off('swipeleft', @handleSwipe)
 
   distinctMovies: (movies) ->
     flags = []
@@ -25,10 +23,14 @@ module.exports = Main = React.createClass
       i++
     output
 
+  handleSwipe: ->
+    console.log 'hello'
+
   renderMovies: ->
     for movie in @distinctMovies @props.movies
-      <div className="col s12 m6 l3 movie">
-        <img src="#{movie.movie_poster}" alt="#{movie.movie_id}"/></div>
+      <div className="col s12 movie">
+        <img src="#{movie.movie_poster}" alt="#{movie.movie_id}"/>
+      </div>
 
   render: ->
     <div className="row">
