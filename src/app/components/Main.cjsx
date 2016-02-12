@@ -1,36 +1,27 @@
 React = require 'react'
+Movie = require './Movie.cjsx'
 
 module.exports = Main = React.createClass
   #getInitialState: ->
 
-  componentDidMount: ->
-    @hammer = Hammer @getDOMNode()
-    @hammer.on('swipeleft', @handleSwipe)
-
-  componentWillUnmount: ->
-    @hammer.off('swipeleft', @handleSwipe)
-
   distinctMovies: (movies) ->
-    flags = []
-    output = []
+    output = {}
     i = 0
     while i < movies.length
-      if flags[movies[i].movie_id]
-        i++
-        continue
-      flags[movies[i].movie_id] = true
-      output.push movies[i]
+      movieId = movies[i].movie_id
+      if not output[movieId]
+        output[movieId] = []
+      output[movieId].push movies[i]
       i++
     output
 
-  handleSwipe: ->
-    console.log 'hello'
-
   renderMovies: ->
-    for movie in @distinctMovies @props.movies
-      <div className="col s12 movie">
-        <img src="#{movie.movie_poster}" alt="#{movie.movie_id}"/>
-      </div>
+    distMovies = @distinctMovies @props.movies
+    for movie of distMovies
+      if distMovies.hasOwnProperty(movie)
+        <div className="col s12 movie">
+          <Movie movie={distMovies[movie]} />
+        </div>
 
   render: ->
     <div className="row">
