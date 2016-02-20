@@ -15,3 +15,4 @@ module.exports =
 
   api:
     theater: 'http://showtimes.everyday.in.th/api/v2/theater/'
+    movie: 'http://showtimes.everyday.in.th/api/v2/movie/'

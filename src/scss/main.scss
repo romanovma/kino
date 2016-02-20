@@ -12,11 +12,13 @@ body {
   background: black;
 }
 
-img {
-  width: 100%;
-  height: auto;
+.poster {
   max-width: 40rem;
-  min-height: 40rem;
+  img {
+    width: 100%;
+    height: auto;
+    min-height: 42rem;
+  }
 }
 
 .movie {
@@ -25,15 +27,45 @@ img {
 }
 
 .schedule {
-  height: 100%;
+  height: 46rem;
 }
 
-.cinema {
+.closest,
+.cinema,
+.label {
   color: gray;
   display: inline-block;
   font-size: 1.6rem;
   font-weight: normal;
   overflow: hidden;
+  position: relative;
   text-align: center;
+  vertical-align: top;
   width: 25%;
+}
+
+.label {
+  display: none;
+  font-style: italic;
+  font-size: 1.4rem;
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+
+.movie-wrapper:first-child {
+  .label {
+    display: inline-block;
+  }
+}
+
+.cinema {
+  height: 100%;
+}
+
+.time {
+  position: absolute;
+  width: 100%;
+  &.small {
+    font-size: 1.6rem;
+  }
 }

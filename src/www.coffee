@@ -85,7 +85,7 @@ server.on 'listening', onListening
 ###
 
 new CronJob
-  cronTime: '0 */30 * * * *'
+  cronTime: '0 */15 * * * *'
   onTick: () ->
     console.log 'cron started: ' + moment().format();
     r.connect config.rethinkdb

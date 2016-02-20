@@ -19,8 +19,8 @@ module.exports = Main = React.createClass
     distMovies = @distinctMovies @props.movies
     for movie of distMovies
       if distMovies.hasOwnProperty(movie)
-        <div className="col s12 movie">
-          <Movie movie={distMovies[movie]} />
+        <div className="col s12 movie-wrapper">
+          <Movie movieData={distMovies[movie]} />
         </div>
 
   render: ->
