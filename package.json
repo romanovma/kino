@@ -52,10 +52,12 @@
     "nodemailer": "^1.4.0",
     "react": "^0.13.3",
     "react-swipe": "^2.1.0",
+    "react-videojs": "0.0.2",
     "reactify": "^1.1.1",
     "request-promise": "^1.0.2",
     "serve-favicon": "~2.3.0",
     "swipe-js-iso": "^2.0.1",
+    "videojs-youtube": "^2.0.8",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },

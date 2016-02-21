@@ -1,9 +1,11 @@
 r = require 'rethinkdb'
 config = require './config'
 http = require 'http'
+https = require 'https'
 reqPro = require 'request-promise'
 async = require 'async'
 promise = require 'bluebird'
+fs = require 'fs'
 
 
 #TODO: pass error down to middlewares
@@ -27,7 +29,7 @@ closeConnection = (req, res, next) ->
   next()
 
 getMovies = (conn, next) ->
-  r.table 'showtimes'
+  r.table 'movies'
   .run conn
   .then (cursor) ->
     cursor.toArray()
@@ -67,7 +69,7 @@ updateSchedule =  (conn, next) ->
           if not(oldDate?) or (oldDate isnt newDate)
             isUpdate = yes
             schedule = showtimes.results.filter (result) ->
-              result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1 and result.extra isnt 'Ultra;Screen' and result.extra isnt 'type-4dx;4DX'
+              (result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1) and result.extra isnt 'Ultra;Screen' and result.extra isnt 'type-4dx;4DX'
             .map (result) ->
               result.cinema = cinema.toString()
               result
@@ -85,7 +87,7 @@ updateSchedule =  (conn, next) ->
       else
         console.log path + '--- empty'
   # Get movie info
-  .then () ->
+  .then ->
     if isUpdate
       r.table('movies').delete().run(conn)
       .then ->
@@ -105,7 +107,24 @@ updateSchedule =  (conn, next) ->
                 r.table('movies').filter({ id: movie.movie_id })
                 .update({ showtimes: r.object(cinema, result) })
                 .run(conn)
-  .then () ->
+  # Save posters
+  .then ->
+    if isUpdate
+      r.table('showtimes').pluck("movie_id").distinct().run(conn)
+      .then (cursor) ->
+        cursor.toArray()
+      .then (result) ->
+        promise.map result, (movie) ->
+          if !fs.existsSync './build/images/' + movie.movie_id + '.jpg'
+            file = fs.createWriteStream('./build/images/' + movie.movie_id + '.jpg');
+            r.table('showtimes').filter({movie_id: movie.movie_id}).run(conn)
+            .then (cursor) ->
+              cursor.toArray()
+            .then (result) ->
+              module = if result[0].movie_poster.substring(0,5) == 'https' then https else http
+              request = module.get result[0].movie_poster, (response) ->
+                response.pipe file
+  .then ->
     logResult
   .finally next
 
