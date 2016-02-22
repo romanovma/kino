@@ -1,6 +1,7 @@
 //@import "https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css";
 //@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css";
 
+@import "settings";
 @import "materialize";
 
 html {
@@ -11,6 +12,7 @@ body {
   background: black;
   color: gray;
   font-size: 10px;
+  margin: auto;
 }
 
 .hidden {
@@ -25,11 +27,10 @@ body {
 
 .main {
   position: relative;
-  min-height: 42rem;
+  text-align: left;
 }
 
 .poster {
-  //max-width: 40rem;
   img {
     width: 100%;
     height: auto;
@@ -42,30 +43,135 @@ body {
   transform: translateY(-50%);
   padding: 2.5rem 1rem;
   overflow: hidden;
-  max-height: 42rem;
-  .title {
-    color: #2196F3;
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  .director {
-    font-size: 1.8rem;
-    color: #aaa;
-    margin-bottom: 3rem;
-  }
-  .cast {
-    font-size: 1.2rem;
-    text-align: left;
-    margin-bottom: 4rem;
-  }
-  .storyline {
-    font-size: 1.2rem;
-    text-align: left;
-  }
+}
+
+.title {
+  color: #2196F3;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.director {
+  font-size: 1.8rem;
+  color: #aaa;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.cast {
+  font-size: 1.2rem;
+  text-align: left;
+  margin-bottom: 4rem;
+}
+.storyline {
+  font-size: 1.2rem;
+  text-align: left;
 }
 
 .trailers {
-  padding: 2.5rem 1rem;
+  padding: 0 1rem;
+  .title,
+  .director,
+  .cast {
+    display: none;
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: $mediaTablet) and (max-width: $mediaDesktop) {
+  body {
+    max-width: 700px;
+  }
+  .main {
+    height: 50rem !important;
+    margin-bottom: 2rem;
+    width: 50%;
+  }
+  .title {
+    font-size: 5rem;
+  }
+  .director {
+    font-size: 3rem;
+  }
+  .schedule,
+  .cinema-labels {
+    width: 100%;
+  }
+
+  .main > div,
+  .main > div > div {
+    overflow: visible !important;
+  }
+  .poster,
+  .description,
+  .trailers {
+    float: none !important;
+    height: 50rem !important;
+    display: inline-block;
+    position: static !important;
+    transform: none !important;
+    vertical-align: middle;
+  }
+  .description {
+    display: none;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .cast {
+    padding-left: 1rem;
+    font-size: 1.8rem;
+  }
+  .align-vertically {
+    justify-content: space-between;
+  }
+  .trailers {
+    .title,
+    .director,
+    .cast {
+      display: block;
+    }
+  }
+  .trailers .video-wrapper:nth-child(5) {
+    display: none;
+  }
+}
+
+@media (min-width: $mediaDesktop) {
+  body {
+    max-width: $mediaDesktop;
+  }
+  .main {
+    height: 49rem !important;
+    margin-bottom: 3rem;
+    width: 33.33%;
+  }
+  .schedule,
+  .cinema-labels {
+    width: 66.66%;
+  }
+  .cinema:not(.long) {
+    height: 49rem !important;
+  }
+  .main > div,
+  .main > div > div {
+    overflow: visible !important;
+  }
+  .poster,
+  .description,
+  .trailers {
+    float: none !important;
+    height: 49rem !important;
+    display: inline-block;
+    position: static !important;
+    transform: none !important;
+    vertical-align: middle;
+  }
+  .description {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .trailers .title {
+    display: none;
+  }
 }
 
 .align-vertically {
@@ -92,10 +198,6 @@ body {
   height: auto;
 }
 
-.schedule {
-  //height: 46rem;
-}
-
 .closest,
 .cinema,
 .cinema-label {
@@ -115,6 +217,9 @@ body {
   font-size: 1.4rem;
   opacity: 0.5;
   margin-bottom: 1rem;
+  @media (min-width: $mediaTablet) {
+    font-size: 2rem;
+  }
 }
 
 // .movie-wrapper:first-child {
@@ -130,7 +235,7 @@ body {
 .time {
   position: absolute;
   width: 100%;
-  &.small {
-    font-size: 1.6rem;
+  &.past {
+    opacity: 0.7;
   }
 }
