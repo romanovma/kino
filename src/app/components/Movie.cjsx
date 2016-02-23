@@ -88,10 +88,10 @@ module.exports = Movie = React.createClass
   # Render
   renderTrailer: (count) ->
     if @props.movieData.videos[count.toString()]?
-      videoUrl = '{ "preload": "metadata", "techOrder": ["youtube"], "sources": [{"type": "video/youtube", "src": "' + @props.movieData.videos[count.toString()].url + '"}] }'
+      videoUrl = '{ "preload": "none", "techOrder": ["youtube"], "sources": [{"type": "video/youtube", "src": "' + @props.movieData.videos[count.toString()].url + '"}] }'
       result =
         <div key="#{@props.movieData.id}-#{count.toString()}" className="video-wrapper">
-          <video id="#{@props.movieData.id}-#{count.toString()}" className="video-js vjs-default-skin" controls preload="metadata" data-setup={videoUrl}>
+          <video data-setup="{}" src="./trailers/#{@props.movieData.id}-#{count.toString()}.mp4" id="#{@props.movieData.id}-#{count.toString()}" className="video-js" controls preload="none">
             <p className="vjs-no-js">
               To view this video please enable JavaScript, and consider upgrading to a web browser that
               <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>

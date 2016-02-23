@@ -7,13 +7,14 @@ html.no-js(lang='en')
     title= 'kino in CM'
     link(rel='stylesheet', type='text/css', href='http://vjs.zencdn.net/5.7.1/video-js.css')
     link(rel='stylesheet', type='text/css', href='css/main.css')
+
   body
     block content
       #content
         != content
     script(id='initial-state' type='application/json')
       != state
-    script(type='text/javascript' src='http://vjs.zencdn.net/5.7.1/video.js')
+    script(type='text/javascript' defer='defer' src='http://vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js')
+    script(type='text/javascript' defer='defer' src='http://vjs.zencdn.net/5.7.1/video.js')
     script(type='text/javascript' src='js/jquery-plugins.js')
-    script(type='text/javascript' src='js/Youtube.min.js')
     script(type='text/javascript' src='js/bundle.js')

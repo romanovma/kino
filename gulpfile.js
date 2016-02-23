@@ -17,7 +17,7 @@ var buildDir = './build/';
 
 gulp.task('start_server', ['build', 'server']);
 
-gulp.task('build',['browserify', 'js', 'sass', 'fonts']);
+gulp.task('build',['browserify', 'js', 'sass', 'css', 'fonts']);
 
 gulp.task('browserify', function() {
   return browserify('./src/app/index.cjsx')
@@ -43,12 +43,10 @@ gulp.task('sass', function () {
     .pipe(browserSync.reload({stream: true}));
 });
 
-//@TODO get rid of this. Beleive this is not required
-// gulp.task('cjsx', function() {
-//   gulp.src('./src/app/components/App.cjsx')
-//     .pipe(cjsx({bare: true}).on('error', gutil.log))
-//     .pipe(gulp.dest('./src/app/components/'));
-// });
+gulp.task('css', function() {
+  gulp.src('./src/scss/*.css')
+    .pipe(gulp.dest(buildDir + 'css'));
+});
 
 gulp.task('js', function() {
   gulp.src('./src/app/*.js')

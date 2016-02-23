@@ -6,6 +6,7 @@ reqPro = require 'request-promise'
 async = require 'async'
 promise = require 'bluebird'
 fs = require 'fs'
+ytdl = require 'ytdl-core'
 
 
 #TODO: pass error down to middlewares
@@ -66,7 +67,7 @@ updateSchedule =  (conn, next) ->
           newDate = showtimes.results.reduce((max, current) ->
             return if max.updated_on < current.updated_on then current else max)
             .updated_on
-          if not(oldDate?) or (oldDate isnt newDate)
+          # if not(oldDate?) or (oldDate isnt newDate)
             isUpdate = yes
             schedule = showtimes.results.filter (result) ->
               (result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1) and result.extra isnt 'Ultra;Screen' and result.extra isnt 'type-4dx;4DX'
@@ -82,8 +83,8 @@ updateSchedule =  (conn, next) ->
               r.table('updates').filter({cinema: cinema}).update({lastUpdate: newDate}).run(conn)
             .then (result) ->
               logResult.push result
-          else
-            return
+          # else
+          #   return
       else
         console.log path + '--- empty'
   # Get movie info
@@ -124,6 +125,32 @@ updateSchedule =  (conn, next) ->
               module = if result[0].movie_poster.substring(0,5) == 'https' then https else http
               request = module.get result[0].movie_poster, (response) ->
                 response.pipe file
+  # Save trailers
+    if isUpdate
+      r.table('showtimes').pluck("movie_id").distinct().run(conn)
+      .then (cursor) ->
+        cursor.toArray()
+      .then (result) ->
+        promise.map result, (movie) ->
+          if !fs.existsSync './build/trailers/' + movie.movie_id + '.mp4'
+            r.table('movies').filter({id: movie.movie_id}).run(conn)
+            .then (cursor) ->
+              cursor.toArray()
+            .then (result) ->
+              if result[0].videos[0]?
+                url = result[0].videos[0].url
+                ytdl(url, filter: (format) ->
+                  format.container == 'mp4' and format.resolution == '360p')
+                .pipe fs.createWriteStream('./build/trailers/' + result[0].id + '-0.mp4')
+                .on 'finish', ->
+                  console.log result[0].id + ' video downloaded'
+              if result[0].videos[1]?
+                url = result[0].videos[1].url
+                ytdl(url, filter: (format) ->
+                  format.container == 'mp4' and format.resolution == '360p')
+                .pipe fs.createWriteStream('./build/trailers/' + result[0].id + '-1.mp4')
+                .on 'finish', ->
+                  console.log result[0].id + ' video downloaded'
   .then ->
     logResult
   .finally next

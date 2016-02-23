@@ -59,7 +59,8 @@
     "swipe-js-iso": "^2.0.1",
     "videojs-youtube": "^2.0.8",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "ytdl-core": "^0.7.10"
   },
   "devDependencies": {
     "browser-sync": "^2.11.1",
