@@ -57,6 +57,7 @@
     "react-videojs": "0.0.2",
     "reactify": "^1.1.1",
     "request-promise": "^1.0.2",
+    "rethinkdb": "^2.2.1",
     "serve-favicon": "~2.3.0",
     "swipe-js-iso": "^2.0.1",
     "videojs-youtube": "^2.0.8",
