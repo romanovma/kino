@@ -2,7 +2,7 @@ express = require 'express'
 bodyParser = require 'body-parser'
 debug = require('debug')('router')
 #index = require './app/bundle'
-React = require 'React'
+React = require 'react'
 dbUtils = require './dbUtils'
 require 'coffee-react/register'
 App = React.createFactory(require './app/components/App.cjsx')
