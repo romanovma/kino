@@ -42,7 +42,8 @@ body {
   position: absolute;
   transform: translateY(-50%);
   padding: 2.5rem 1rem;
-  text-overflow: ellipsis;
+  //text-overflow: ellipsis;
+  overflow: auto;
 }
 
 .title {
