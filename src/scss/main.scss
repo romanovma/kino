@@ -34,7 +34,7 @@ body {
   img {
     width: 100%;
     height: auto;
-    min-height: 42rem;
+    min-height: 35rem;
   }
 }
 
@@ -42,7 +42,7 @@ body {
   position: absolute;
   transform: translateY(-50%);
   padding: 2.5rem 1rem;
-  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .title {
@@ -113,10 +113,10 @@ body {
     width: 50%;
   }
   .title {
-    font-size: 5rem;
+    //font-size: 5rem;
   }
   .director {
-    font-size: 3rem;
+    //font-size: 3rem;
   }
   .schedule,
   .cinema-labels {
@@ -144,7 +144,7 @@ body {
   }
   .cast {
     padding-left: 1rem;
-    font-size: 1.8rem;
+    //font-size: 1.8rem;
   }
   .align-vertically {
     justify-content: space-between;

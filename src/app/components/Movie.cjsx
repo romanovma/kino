@@ -15,7 +15,7 @@ module.exports = Movie = React.createClass
     rerender: 0
 
   componentDidMount: ->
-    height = React.findDOMNode(@refs.main).clientHeight + 'px'
+    height = React.findDOMNode(@refs.img).clientHeight + 'px'
     React.findDOMNode(@refs.description).style.height = height
     React.findDOMNode(@refs.trailers).style.height = height
 
@@ -91,7 +91,7 @@ module.exports = Movie = React.createClass
       videoUrl = '{ "preload": "none", "techOrder": ["youtube"], "sources": [{"type": "video/youtube", "src": "' + @props.movieData.videos[count.toString()].url + '"}] }'
       result =
         <div key="#{@props.movieData.id}-#{count.toString()}" className="video-wrapper">
-          <video data-setup="{}" src="./trailers/#{@props.movieData.id}-#{count.toString()}.mp4" id="#{@props.movieData.id}-#{count.toString()}" className="video-js" controls preload="none">
+          <video data-setup='{"customControlsOnMobile": true, "nativeControlsForTouch": false}' src="./trailers/#{@props.movieData.id}-#{count.toString()}.mp4" id="#{@props.movieData.id}-#{count.toString()}" className="video-js" controls preload="none">
             <p className="vjs-no-js">
               To view this video please enable JavaScript, and consider upgrading to a web browser that
               <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
