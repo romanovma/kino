@@ -8,6 +8,8 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps = require('gulp-sourcemaps');
+var minifyCSS = require('gulp-clean-css');
+var uglify = require('gulp-uglify');
 var buffer = require('vinyl-buffer');
 var browserify = require('browserify');
 var browserSync = require('browser-sync').create();
@@ -17,15 +19,14 @@ var buildDir = './build/';
 
 gulp.task('start_server', ['build', 'server']);
 
-gulp.task('build',['browserify', 'js', 'sass', 'css', 'fonts']);
+gulp.task('build',['browserify', 'js', 'sass', 'css', 'fonts', 'images']);
 
 gulp.task('browserify', function() {
   return browserify('./src/app/index.cjsx')
   .bundle()
   .pipe(source('bundle.js'))
   .pipe(buffer())
-  .pipe(sourcemaps.init({loadMaps: true}))
-  .pipe(sourcemaps.write('./'))
+  .pipe(uglify())
   .pipe(gulp.dest(buildDir + 'js'))
   .pipe(browserSync.stream());
 });
@@ -34,11 +35,15 @@ gulp.task('sass', function () {
   gulp.src('./src/scss/main.scss')
     .pipe(sourcemaps.init())
     .pipe(sass()).on('error', sass.logError)
-    .pipe(sourcemaps.write())
     .pipe(autoprefixer({
       browsers: ['last 2 versions'],
       cascade: false
     }))
+    .pipe(minifyCSS({debug: true}, function(details) {
+            console.log(details.stats.originalSize);
+            console.log(details.stats.minifiedSize);
+          }))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(buildDir + 'css'))
     .pipe(browserSync.reload({stream: true}));
 });
@@ -51,6 +56,11 @@ gulp.task('css', function() {
 gulp.task('js', function() {
   gulp.src('./src/app/*.js')
     .pipe(gulp.dest(buildDir + 'js'));
+});
+
+gulp.task('images', function() {
+  gulp.src('./src/images/*.*')
+    .pipe(gulp.dest(buildDir + 'images'));
 });
 
 gulp.task('fonts', function() {
