@@ -70,7 +70,7 @@ updateSchedule =  (conn, next) ->
           # if not(oldDate?) or (oldDate isnt newDate)
             isUpdate = yes
             schedule = showtimes.results.filter (result) ->
-              (result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1) and result.extra isnt 'Ultra;Screen' and result.extra isnt 'type-4dx;4DX'
+              (result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1) and result.cinema isnt 'F' and result.extra isnt 'Ultra;Screen' and result.extra isnt 'type-4dx;4DX'
             .map (result) ->
               result.cinema = cinema.toString()
               result
