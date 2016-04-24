@@ -71,11 +71,21 @@ module.exports = Movie = React.createClass
   getDetail: (field) ->
     value = ''
     for lang of @props.movieData.details
-      if @props.movieData.details[lang.toString()].language is 'en'
-        value = @props.movieData.details[lang.toString()][field]
+      item = @props.movieData.details[lang.toString()]
+      if item.language is 'en'
+        value = item[field]
     if value == ''
       value = @props.movieData.details['0'][field]
     value
+
+  getImdbId: ->
+    id = ''
+    for feeder of @props.movieData.feeders
+      item = @props.movieData.feeders[feeder.toString()];
+      if item.name is 'imdb'
+        url = item.url.slice(0, -1);
+        id = url.substr(url.lastIndexOf('/') + 1)
+    id
 
   getMinutes: (time)->
     time.substring(0,2) * 60 + time.substring(3,5) * 1
@@ -109,18 +119,25 @@ module.exports = Movie = React.createClass
         <div className="title">{@getDetail 'title'}</div>
         <div className="director">{@getDetail 'director'}</div>
         <div className="cast">{@getDetail 'cast'}</div>
+        {@renderRating()}
         <div className="storyline">{@getDetail 'storyline'}</div>
+        {@renderTrailer 0}
       </div>
       <div ref='trailers' className="trailers">
         <div className="align-vertically">
-          <div className="title">{@getDetail 'title'}</div>
-          <div className="director">{@getDetail 'director'}</div>
-          <div className="cast">{@getDetail 'cast'}</div>
           {@renderTrailer 0}
           {@renderTrailer 1}
         </div>
       </div>
     </ReactSwipe>
+
+  renderRating: ->
+    if @getImdbId()
+      <div className="rating">
+        <span className="imdbRatingPlugin" data-user="ur66573722" data-title="#{@getImdbId()}" data-style="p5">
+          <a target="_blank" href="http://www.imdb.com/title/#{@getImdbId()}/?ref_=plg_rt_1">IMDb </a>
+        </span>
+      </div>
 
   renderCinemas: ->
     for cinema of config.cinemas
@@ -141,7 +158,9 @@ module.exports = Movie = React.createClass
     for time in showtimes
       now = moment().tz('Asia/Bangkok').format('HH:mm')
       past = if time < now then ' past' else ''
-      <div key={time} className="time#{past}" style={{top: @pixelPerMinute * (@getMinutes(time) - @topPadding)}}>{time}</div>
+      <div key={time} className="time#{past}" style={{top: @pixelPerMinute * (@getMinutes(time) - @topPadding)}}>
+        <a target="_blank" href="#{config.cinemaUrls[cinema]}">{time}</a>
+      </div>
 
   render: ->
     <div className="movie">

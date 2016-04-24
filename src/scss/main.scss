@@ -58,10 +58,12 @@ body {
   position: absolute;
   transform: translateY(-50%);
   padding: 2.5rem 1rem;
-  //text-overflow: ellipsis;
   overflow: auto;
   &::-webkit-scrollbar {
     background: black !important;
+  }
+  .video-wrapper {
+    display: none;
   }
 }
 
@@ -85,16 +87,11 @@ body {
 .storyline {
   font-size: 1.2rem;
   text-align: left;
+  margin-bottom: 3rem;
 }
 
 .trailers {
   padding: 0 1rem;
-  .title,
-  .director,
-  .cast {
-    display: none;
-    margin-bottom: 0;
-  }
 }
 
 .video-js {
@@ -132,12 +129,6 @@ body {
     margin-bottom: 2rem;
     width: 50%;
   }
-  .title {
-    //font-size: 5rem;
-  }
-  .director {
-    //font-size: 3rem;
-  }
   .schedule,
   .cinema-labels {
     width: 100%;
@@ -158,25 +149,19 @@ body {
     vertical-align: middle;
   }
   .description {
-    display: none;
     padding-left: 2rem;
     padding-right: 2rem;
+    .video-wrapper {
+      display: block;
+    }
   }
   .cast {
     padding-left: 1rem;
-    //font-size: 1.8rem;
   }
   .align-vertically {
     justify-content: space-between;
   }
   .trailers {
-    .title,
-    .director,
-    .cast {
-      display: block;
-    }
-  }
-  .trailers .video-wrapper:nth-child(5) {
     display: none;
   }
 }
@@ -256,8 +241,12 @@ body {
   overflow: hidden;
   position: relative;
   text-align: center;
+  // text-decoration: underline;
   vertical-align: top;
   width: 25%;
+  // a {
+  //   color: #888;
+  // }
 }
 
 .cinema-label {
@@ -286,5 +275,18 @@ body {
   width: 100%;
   &.past {
     opacity: 0.6;
+  }
+}
+
+a {
+  color: gray;
+  font-weight: normal;
+}
+
+.imdbRatingPlugin .rating {
+  margin-left: 0.7em;
+  color: gray;
+  .ofTen {
+    display: none;
   }
 }

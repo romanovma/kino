@@ -67,7 +67,7 @@ updateSchedule =  (conn, next) ->
           newDate = showtimes.results.reduce((max, current) ->
             return if max.updated_on < current.updated_on then current else max)
             .updated_on
-          # if not(oldDate?) or (oldDate isnt newDate)
+          if not(oldDate?) or (oldDate isnt newDate)
             isUpdate = yes
             schedule = showtimes.results.filter (result) ->
               (result.audio.indexOf('en') > -1 or result.caption.indexOf('en') > -1) and result.cinema isnt 'F' and result.extra isnt 'Ultra;Screen' and result.extra isnt 'type-4dx;4DX'
@@ -83,8 +83,8 @@ updateSchedule =  (conn, next) ->
               r.table('updates').filter({cinema: cinema}).update({lastUpdate: newDate}).run(conn)
             .then (result) ->
               logResult.push result
-          # else
-          #   return
+          else
+            return
       else
         console.log path + '--- empty'
   # Get movie info
