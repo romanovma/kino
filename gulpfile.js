@@ -33,7 +33,6 @@ gulp.task('browserify', function() {
 
 gulp.task('sass', function () {
   gulp.src('./src/scss/main.scss')
-    .pipe(sourcemaps.init())
     .pipe(sass()).on('error', sass.logError)
     .pipe(autoprefixer({
       browsers: ['last 2 versions'],
@@ -43,7 +42,6 @@ gulp.task('sass', function () {
             console.log(details.stats.originalSize);
             console.log(details.stats.minifiedSize);
           }))
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest(buildDir + 'css'))
     .pipe(browserSync.reload({stream: true}));
 });

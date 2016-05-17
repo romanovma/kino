@@ -39,6 +39,8 @@ body {
   border-bottom: solid 2px rgba(128,128,128,0.3);
   overflow: hidden;
   text-align: center;
+  will-change: auto;
+  transform: translate3d(0, 0, 0);
 }
 
 .main {
